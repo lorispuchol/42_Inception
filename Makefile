@@ -1,8 +1,8 @@
-NAME		=	easyfind
+NAME		=	Inception
 
-INC			=	easyfind.hpp \
+INC			=	Inception.hpp \
 
-SRCS 		=	main.cpp \
+SRCS 		=	Inception.cpp \
 
 OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}
 
@@ -28,3 +28,5 @@ fclean: 	clean
 re: 		fclean all
 
 .PHONY: 	all clean fclean re
+
+#Le makefile fait appel au docker-compose.yml, cela permet de configurer l'appplication dans son ensemble (nb de container, connexion entre eux...) --> 
