@@ -1,32 +1,34 @@
-NAME		=	Inception
+NAME				= Inception
 
-INC			=	Inception.hpp \
+all:				${NAME}
 
-SRCS 		=	Inception.cpp \
+${NAME}:
+					docker-compose -f ./srcs/docker-compose.yml up -d
+			
+stop:		
+					docker-compose -f ./srcs/docker-compose.yml stop
 
-OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}
+start:		
+					docker-compose -f ./srcs/docker-compose.yml start
 
-CC 			=	c++
-CFLAGS 		=	-Wall -Werror -Wextra -std=c++98
-RM 			=	rm -rf
+down:				
+					docker-compose -f ./srcs/docker-compose.yml down
 
-objs/%.o: 	%.cpp ${INC} Makefile
-			@mkdir -p $(dir $@)
-			$(CC) ${CFLAGS} -c $< -o $@
+clean:				down
+					@if [ -z "$$(docker images -qa)" ]; then \
+						echo "Empty"; \
+					else \
+						echo "docker rmi -f "; \
+						echo $$(docker images -qa); \
+						docker rmi -f $$(docker images -qa);\
+					fi
+					
+fclean: 			clean
+					docker system prune -f
+					
 
-all:		 ${NAME}
+re: 				clean all
 
-${NAME}: 	${OBJS} ${INC}
-			$(CC) ${CFLAGS} -o $(NAME) ${OBJS}
+fre: 				fclean all
 
-clean:
-			${RM} objs/
-
-fclean: 	clean
-			${RM} ${NAME}
-
-re: 		fclean all
-
-.PHONY: 	all clean fclean re
-
-#Le makefile fait appel au docker-compose.yml, cela permet de configurer l'appplication dans son ensemble (nb de container, connexion entre eux...) --> 
+.PHONY: 			all stop start down clean fclean re fre

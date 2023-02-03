@@ -1,0 +1,25 @@
+# Le docker-compose met en place toute l'appli (nb de container, connexion entre eux...)
+# -- le docker compose va build les image des 3 services en utilisant docker-build avec chaque dockerfile
+
+version: "3.8"
+
+services:
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx/
+      dockerfile: DockerfileNginx
+    ports:
+      - 443:443
+    init: true
+    restart: on-failure
+  # mariadb:
+  #   build:
+  #     context: ./mariadb/
+  #     dockerfile: DockerfileMariadb
+    
+  # wordpress:
+  #   build:
+  #     context: ./wordpress/
+  #     dockerfile: DockerfileWordpress
