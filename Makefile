@@ -16,11 +16,18 @@ down:
 
 clean:				down
 					@if [ -z "$$(docker images -qa)" ]; then \
-						echo "Empty"; \
+						echo "No Images"; \
 					else \
 						echo "docker rmi -f "; \
 						echo $$(docker images -qa); \
 						docker rmi -f $$(docker images -qa);\
+					fi
+					@if [ -z "$$(docker volume ls -q)" ]; then \
+						echo "No Volumes"; \
+					else \
+						echo "docker volume rm -f "; \
+						echo $$(docker volume ls -q); \
+						docker volume rm -f $$(docker volume ls -q);\
 					fi
 					
 fclean: 			clean

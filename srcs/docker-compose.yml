@@ -3,10 +3,63 @@
 
 version: "3.8"
 
+volumes:
+  wp_vol:
+    name: wp_vol
+    driver: local
+    driver_opts:
+      device: /home/lpuchol/data/wp_vol
+      o: bind
+      type: none
+
+  mariadb_vol:
+    name: mariadb_vol
+    driver: local
+    driver_opts:
+      device: /home/lpuchol/data/mariadb_vol
+      o: bind
+      type: none
+
+networks:
+  inception_net:
+    name: inception_net
+
+
 services:
 
+  # mariadb:
+  #   image: mariadb_img
+  #   container_name: mariadb_ctn
+  #   build:
+  #     context: ./mariadb/
+  #     dockerfile: DockerfileMariadb
+  #   init: true
+  #   restart: on-failure
+  #   networks:
+  #     - inception_net
+  #   volumes:
+  #     -mariadb_vol:/var/lib/mysql
+
+  # wordpress:
+  #   depends_on:
+  #     - mariadb
+  #   image: wordpress_img
+  #   container_name: wordpress_ctn
+  #   build:
+  #     context: ./nginx/
+  #     dockerfile: DockerfileWordpress
+  #   init: true
+  #   restart: on-failure
+  #   networks:
+  #     - inception_net
+  #   volumes:
+  #     -wp_vol:/var/www/html
+
   nginx:
-    container_name: nginx
+    # depends_on:
+      # - wordpress
+    image: nginx_img
+    container_name: nginx_ctn
     build:
       context: ./nginx/
       dockerfile: DockerfileNginx
@@ -14,12 +67,7 @@ services:
       - 443:443
     init: true
     restart: on-failure
-  # mariadb:
-  #   build:
-  #     context: ./mariadb/
-  #     dockerfile: DockerfileMariadb
-    
-  # wordpress:
-  #   build:
-  #     context: ./wordpress/
-  #     dockerfile: DockerfileWordpress
+    networks:
+      - inception_net
+    volumes:
+      - wp_vol:/var/www/html
