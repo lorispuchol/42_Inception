@@ -2,7 +2,10 @@ NAME				= Inception
 
 all:				${NAME}
 
-${NAME}:
+# changer la ligne mkdir pour debian
+${NAME}:			
+					mkdir -p	/Users/lorispuchol/data/wp_vol
+					mkdir -p	/Users/lorispuchol/data/mariadb_vol
 					docker-compose -f ./srcs/docker-compose.yml up -d
 			
 stop:		
@@ -29,10 +32,12 @@ clean:				down
 						echo $$(docker volume ls -q); \
 						docker volume rm -f $$(docker volume ls -q);\
 					fi
-					
+
+# changer la ligne rm pour debian
+
 fclean: 			clean
 					docker system prune -f
-					
+					rm -rf /Users/lorispuchol/data/*
 
 re: 				clean all
 

@@ -8,7 +8,7 @@ volumes:
     name: wp_vol
     driver: local
     driver_opts:
-      device: /home/lpuchol/data/wp_vol
+      device: ${VOLUME_PATH_WP}
       o: bind
       type: none
 
@@ -16,29 +16,30 @@ volumes:
     name: mariadb_vol
     driver: local
     driver_opts:
-      device: /home/lpuchol/data/mariadb_vol
+      device: ${VOLUME_PATH_MARIADB}
       o: bind
       type: none
 
 networks:
   inception_net:
     name: inception_net
-
+    driver: bridge
 
 services:
-
   # mariadb:
   #   image: mariadb_img
   #   container_name: mariadb_ctn
   #   build:
-  #     context: ./mariadb/
+  #     context: ./requirements/mariadb/
   #     dockerfile: DockerfileMariadb
   #   init: true
   #   restart: on-failure
+  #   env_file:
+  #     - .env
   #   networks:
   #     - inception_net
   #   volumes:
-  #     -mariadb_vol:/var/lib/mysql
+  #     - mariadb_vol:/var/lib/mysql
 
   # wordpress:
   #   depends_on:
@@ -46,28 +47,36 @@ services:
   #   image: wordpress_img
   #   container_name: wordpress_ctn
   #   build:
-  #     context: ./nginx/
+  #     context: ./requirements/wordpress/
   #     dockerfile: DockerfileWordpress
   #   init: true
   #   restart: on-failure
+  #   env_file:
+  #     - .env
   #   networks:
   #     - inception_net
   #   volumes:
-  #     -wp_vol:/var/www/html
+  #     - wp_vol:/var/www/Inception
 
   nginx:
     # depends_on:
-      # - wordpress
+    #   - wordpress
     image: nginx_img
     container_name: nginx_ctn
     build:
-      context: ./nginx/
+      context: ./requirements/nginx/
       dockerfile: DockerfileNginx
+      args:
+        - FILES_SITE_PATH=${FILES_SITE_PATH}
     ports:
       - 443:443
+      - 80:80
+# enlever 80:80
     init: true
     restart: on-failure
+    env_file:
+      - .env
     networks:
       - inception_net
     volumes:
-      - wp_vol:/var/www/html
+      - wp_vol:/var/www/Inception
