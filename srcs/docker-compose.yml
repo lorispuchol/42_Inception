@@ -1,7 +1,5 @@
-# Le docker-compose met en place toute l'appli (nb de container, connexion entre eux...)
-# -- le docker compose va build les image des 3 services en utilisant docker-build avec chaque dockerfile
-
 version: "3.8"
+# verifier les noms des services en fonction du sujet
 
 volumes:
   wp_vol:
@@ -27,7 +25,7 @@ networks:
 
 services:
   # mariadb:
-  #   image: mariadb_img
+  #   image: mariadb:42
   #   container_name: mariadb_ctn
   #   build:
   #     context: ./requirements/mariadb/
@@ -42,9 +40,9 @@ services:
   #     - mariadb_vol:/var/lib/mysql
 
   # wordpress:
-  #   depends_on:
-  #     - mariadb
-  #   image: wordpress_img
+  #   # depends_on:
+  #     # - mariadb
+  #   image: wordpress:42
   #   container_name: wordpress_ctn
   #   build:
   #     context: ./requirements/wordpress/
@@ -56,12 +54,12 @@ services:
   #   networks:
   #     - inception_net
   #   volumes:
-  #     - wp_vol:/var/www/Inception
+  #     - wp_vol:${FILES_SITE_PATH}
 
   nginx:
     # depends_on:
-    #   - wordpress
-    image: nginx_img
+      # - wordpress
+    image: nginx:42
     container_name: nginx_ctn
     build:
       context: ./requirements/nginx/
@@ -70,8 +68,6 @@ services:
         - FILES_SITE_PATH=${FILES_SITE_PATH}
     ports:
       - 443:443
-      # - 80:80
-# enlever 80:80
     init: true
     restart: on-failure
     env_file:
@@ -79,4 +75,4 @@ services:
     networks:
       - inception_net
     volumes:
-      - wp_vol:/var/www/Inception
+      - wp_vol:${FILES_SITE_PATH}

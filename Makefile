@@ -34,7 +34,6 @@ clean:				down
 					fi
 
 # changer la ligne rm pour debian
-
 fclean: 			clean
 					docker system prune -f
 					rm -rf /Users/lorispuchol/data/*

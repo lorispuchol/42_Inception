@@ -19,5 +19,3 @@ RUN mkdir -p /ssl_conf && \
 
 ENTRYPOINT [ "nginx" ]
 CMD ["-g", "daemon off;"]
-
-# CMD ["nginx", "-g", "daemon off;"]
