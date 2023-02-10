@@ -23,7 +23,7 @@ EXPOSE 9000
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y php-fpm -y php-mysql -y wget -y curl
+    apt-get install -y php7.3 php-fpm -y php-mysql -y wget -y curl
 
 
 RUN service php7.3-fpm start
