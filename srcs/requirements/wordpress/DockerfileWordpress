@@ -1,7 +1,14 @@
 FROM debian:buster
 
+ARG FILES_SITE_PATH
+
+EXPOSE 9000
+
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install php7.3 php-mysql php-fpm
+    apt-get install -y php-fpm -y php-mysql -y wget -y curl
 
-CMD ["php;"]
+
+RUN service php7.3-fpm start
+
+CMD ["php-fpm7.3", "-R", "-F"]

@@ -24,41 +24,48 @@ networks:
     driver: bridge
 
 services:
-  # mariadb:
-  #   image: mariadb:42
-  #   container_name: mariadb_ctn
-  #   build:
-  #     context: ./requirements/mariadb/
-  #     dockerfile: DockerfileMariadb
-  #   init: true
-  #   restart: on-failure
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - inception_net
-  #   volumes:
-  #     - mariadb_vol:/var/lib/mysql
+  mariadb:
+    image: mariadb:42
+    container_name: mariadb_ctn
+    build:
+      context: ./requirements/mariadb/
+      dockerfile: DockerfileMariadb
+      args:
+        - DB_NAME=${DB_NAME}
+        - DB_USER=${DB_USER}
+        - DB_PASS=${DB_PASS}
+        - DB_ROOT_PASS=${DB_ROOT_PASS}
+    init: true
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - inception_net
+    volumes:
+      - mariadb_vol:${MARIADB_PATH}
 
-  # wordpress:
-  #   # depends_on:
-  #     # - mariadb
-  #   image: wordpress:42
-  #   container_name: wordpress_ctn
-  #   build:
-  #     context: ./requirements/wordpress/
-  #     dockerfile: DockerfileWordpress
-  #   init: true
-  #   restart: on-failure
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - inception_net
-  #   volumes:
-  #     - wp_vol:${FILES_SITE_PATH}
+  wordpress:
+    depends_on:
+      - mariadb
+    image: wordpress:42
+    container_name: wordpress_ctn
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: DockerfileWordpress
+      args:
+        - FILES_SITE_PATH=${FILES_SITE_PATH}
+    init: true
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - inception_net
+    volumes:
+      - wp_vol:${FILES_SITE_PATH}
 
   nginx:
-    # depends_on:
-      # - wordpress
+    depends_on:
+      - wordpress
     image: nginx:42
     container_name: nginx_ctn
     build:

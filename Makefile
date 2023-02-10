@@ -3,6 +3,7 @@ NAME				= Inception
 all:				${NAME}
 
 # changer la ligne mkdir pour debian
+# enlever les tirets de docker-compose pour la vm
 ${NAME}:			
 					mkdir -p	/Users/lorispuchol/data/wp_vol
 					mkdir -p	/Users/lorispuchol/data/mariadb_vol
@@ -35,7 +36,7 @@ clean:				down
 
 # changer la ligne rm pour debian
 fclean: 			clean
-					docker system prune -f
+					docker system prune -af
 					rm -rf /Users/lorispuchol/data/*
 
 re: 				clean all
