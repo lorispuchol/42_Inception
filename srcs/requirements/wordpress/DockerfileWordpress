@@ -2,6 +2,23 @@ FROM debian:buster
 
 ARG FILES_SITE_PATH
 
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
+ARG DB_ROOT_PASS
+ARG DB_HOST
+
+ARG WP_DOMAIN
+ARG WP_TITLE
+
+ARG WP_ADMIN
+ARG ADMIN_PASSW
+ARG ADMIN_MAIL
+
+ARG WP_USER
+ARG USER_PASSW
+ARG USER_MAIL
+
 EXPOSE 9000
 
 RUN apt-get update -y && \
@@ -10,5 +27,30 @@ RUN apt-get update -y && \
 
 
 RUN service php7.3-fpm start
+
+RUN mkdir -p ${FILES_SITE_PATH}
+
+RUN cd ${FILES_SITE_PATH} && \
+    curl -LO https://wordpress.org/latest.tar.gz && \
+    tar xzvf latest.tar.gz && \
+    mv ./wordpress/* ./ && \
+    rm -rf latest.tar.gz wordpress && \
+    rm -f ${FILES_SITE_PATH}/wp-config.php
+
+COPY conf/wp-config.php /var/www/Inception
+
+RUN sed -i "s/db_name_here/${DB_NAME}/g" ${FILES_SITE_PATH}/wp-config.php && \
+    sed -i "s/db_user_here/${DB_USER}/g" ${FILES_SITE_PATH}/wp-config.php && \
+    sed -i "s/db_password_here/${DB_PASS}/g" ${FILES_SITE_PATH}/wp-config.php && \
+    sed -i "s/db_host_here/${DB_HOST}/g" ${FILES_SITE_PATH}/wp-config.php
+
+RUN sed -i "s+listen = /run/php/php7.3-fpm.sock+listen = wordpress_ctn:9000+g" /etc/php/7.3/fpm/pool.d/www.conf
+
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
+
+# RUN wp --allow-root --path="${FILES_SITE_PATH}/" core install --url=${WP_DOMAIN} --title=${WP_TITLE} --admin_user=${WP_ADMIN} --admin_password=${ADMIN_PASSW} --admin_email=${ADMIN_MAIL} && \
+    # wp --allow-root --path="${FILES_SITE_PATH}/" user create ${WP_USER} ${USER_MAIL} --user_pass=${USER_PASSW} --porcelain
 
 CMD ["php-fpm7.3", "-R", "-F"]

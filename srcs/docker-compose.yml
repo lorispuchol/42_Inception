@@ -54,6 +54,20 @@ services:
       dockerfile: DockerfileWordpress
       args:
         - FILES_SITE_PATH=${FILES_SITE_PATH}
+        - DB_NAME=${DB_NAME}
+        - DB_USER=${DB_USER}
+        - DB_PASS=${DB_PASS}
+        - DB_ROOT_PASS=${DB_ROOT_PASS}
+        - DB_HOST=${DB_HOST}
+        - WP_DOMAIN=${WP_DOMAIN}
+        - WP_TITLE=${WP_TITLE}
+        - WP_ADMIN=${WP_ADMIN}
+        - ADMIN_PASSW=${ADMIN_PASSW}
+        - ADMIN_MAIL=${ADMIN_MAIL}
+        - WP_USER=${WP_USER}
+        - USER_PASSW=${USER_PASSW}
+        - USER_MAIL=${USER_MAIL}
+        
     init: true
     restart: on-failure
     env_file:
