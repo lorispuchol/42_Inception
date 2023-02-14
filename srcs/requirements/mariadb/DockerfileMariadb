@@ -1,0 +1,22 @@
+FROM debian:buster
+
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
+ARG DB_ROOT_PASS
+
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install mariadb-client -y && \
+    apt-get install mariadb-server -y
+
+EXPOSE 3306
+
+RUN service mysql start \
+    && mariadb -u root -e \
+    "CREATE DATABASE ${DB_NAME}; \
+    CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';\
+    GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';\
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}';"
+
+CMD ["mysqld", "--bind-address=0.0.0.0"]
