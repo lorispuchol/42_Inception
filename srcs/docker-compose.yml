@@ -1,5 +1,4 @@
 version: "3"
-# verifier les noms des services en fonction du sujet
 
 volumes:
   wp_vol:

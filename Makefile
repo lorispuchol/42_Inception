@@ -7,16 +7,16 @@ all:				${NAME}
 ${NAME}:			
 					mkdir -p	/home/loris/data/wp_vol
 					mkdir -p	/home/loris/data/mariadb_vol
-					docker compose -f ./srcs/docker-compose.yml up -d
+					docker-compose -f ./srcs/docker-compose.yml up -d
 			
 stop:		
-					docker compose -f ./srcs/docker-compose.yml stop
+					docker-compose -f ./srcs/docker-compose.yml stop
 
 start:		
-					docker compose -f ./srcs/docker-compose.yml start
+					docker-compose -f ./srcs/docker-compose.yml start
 
 down:				
-					docker compose -f ./srcs/docker-compose.yml down
+					docker-compose -f ./srcs/docker-compose.yml down
 
 clean:				down
 					@if [ -z "$$(docker images -qa)" ]; then \
@@ -37,7 +37,7 @@ clean:				down
 # changer la ligne rm pour debian
 fclean: 			clean
 					docker system prune -af
-					rm -rf /home/loris/data/*
+					rm -rf /home/loris/data
 
 re: 				clean all
 
