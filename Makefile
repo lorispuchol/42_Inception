@@ -5,8 +5,8 @@ all:				${NAME}
 # changer la ligne mkdir pour debian
 # enlever les tirets de docker-compose pour la vm
 ${NAME}:			
-					mkdir -p	/home/loris/data/wp_vol
-					mkdir -p	/home/loris/data/mariadb_vol
+					mkdir -p	/home/lpuchol/data/wp_vol
+					mkdir -p	/home/lpuchol/data/mariadb_vol
 					docker-compose -f ./srcs/docker-compose.yml up -d
 			
 stop:		
@@ -37,7 +37,7 @@ clean:				down
 # changer la ligne rm pour debian
 fclean: 			clean
 					docker system prune -af
-					rm -rf /home/loris/data
+					rm -rf /home/lpuchol/data
 
 re: 				clean all
 
